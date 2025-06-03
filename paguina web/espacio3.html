@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Modelo: Vida en Condiciones Espaciales</title>
+  <style>
+    body { font-family: sans-serif; background: #111; color: white; text-align: center; }
+    canvas { background: #000; margin-top: 20px; border: 1px solid #333; }
+    button { margin: 0.5rem; padding: 0.5rem 1rem; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Modelo: Efectos de Condiciones Espaciales en la Vida</h1>
+  <button onclick="setCondition('earth')">Gravedad Terrestre</button>
+  <button onclick="setCondition('space')">Microgravedad</button>
+  <button onclick="applyRadiation()">Aplicar Radiación</button>
+  <canvas id="bioCanvas" width="500" height="400"></canvas>
+
+  <script>
+    const ctx = document.getElementById('bioCanvas').getContext('2d');
+    let condition = 'earth';
+    let radiation = false;
+
+    function drawCell() {
+      ctx.clearRect(0, 0, 500, 400);
+      ctx.fillStyle = '#fff';
+      ctx.font = '16px Arial';
+      ctx.fillText("Condición: " + (condition === 'earth' ? 'Gravedad Terrestre' : 'Microgravedad'), 150, 30);
+      ctx.fillText("Radiación: " + (radiation ? 'Alta' : 'Baja'), 180, 50);
+
+      // ADN
+      ctx.strokeStyle = radiation ? 'red' : 'green';
+      ctx.beginPath();
+      ctx.moveTo(200, 100);
+      for (let y = 100; y < 300; y += 20) {
+        ctx.lineTo(200 + Math.sin(y / 10) * 20, y);
+      }
+      ctx.stroke();
+
+      // Músculo
+      ctx.fillStyle = condition === 'earth' ? '#0f0' : '#888';
+      ctx.fillRect(120, 320, condition === 'earth' ? 80 : 50, 20);
+      ctx.fillStyle = '#fff';
+      ctx.fillText("Músculo", 130, 315);
+
+      // Hueso
+      ctx.fillStyle = condition === 'earth' ? '#aaa' : '#444';
+      ctx.fillRect(300, 320, condition === 'earth' ? 80 : 50, 20);
+      ctx.fillStyle = '#fff';
+      ctx.fillText("Hueso", 320, 315);
+    }
+
+    function setCondition(newCond) {
+      condition = newCond;
+      drawCell();
+    }
+
+    function applyRadiation() {
+      radiation = !radiation;
+      drawCell();
+    }
+
+    drawCell();
+  </script>
+</body>
+</html>

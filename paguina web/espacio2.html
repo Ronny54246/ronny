@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Modelo Campo Magnético y Viento Solar</title>
+  <style>
+    body { font-family: sans-serif; background: #001; color: white; text-align: center; }
+    canvas { background: #000; border: 1px solid #ccc; margin-top: 20px; }
+    button { margin: 10px; padding: 10px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Modelo: Campo Magnético Terrestre vs. Viento Solar</h1>
+  <button onclick="launchParticles()">Lanzar Viento Solar</button>
+  <button onclick="toggleField()">Activar/Desactivar Campo Magnético</button>
+  <canvas id="magneticCanvas" width="500" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById('magneticCanvas');
+    const ctx = canvas.getContext('2d');
+    let fieldOn = true;
+    let particles = [];
+
+    function drawEarth() {
+      ctx.fillStyle = 'blue';
+      ctx.beginPath();
+      ctx.arc(250, 200, 30, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (fieldOn) {
+        ctx.strokeStyle = 'lightblue';
+        for (let i = 40; i <= 100; i += 20) {
+          ctx.beginPath();
+          ctx.ellipse(250, 200, i, 80, 0, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+    }
+
+    function launchParticles() {
+      for (let i = 0; i < 20; i++) {
+        particles.push({ x: 0, y: 190 + Math.random() * 20 });
+      }
+    }
+
+    function toggleField() {
+      fieldOn = !fieldOn;
+    }
+
+    function drawParticles() {
+      ctx.fillStyle = 'yellow';
+      for (let p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (fieldOn && p.x > 150 && p.x < 350) {
+          p.y += Math.sin(p.x / 30) * 2;
+        }
+        p.x += 2;
+      }
+      particles = particles.filter(p => p.x < canvas.width);
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawEarth();
+      drawParticles();
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
